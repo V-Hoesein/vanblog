@@ -10,7 +10,8 @@
     "migrate": "prisma migrate dev"
   },
   "prisma": {
-    "schema": "lib/prisma/schema.prisma"
+    "schema": "lib/prisma/schema.prisma",
+    "seed": "node ./lib/prisma/seed.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",
