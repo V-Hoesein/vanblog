@@ -1,10 +1,7 @@
 import { prisma } from "@/lib/client";
 import { NextResponse } from "next/server";
 
-export const GET = async (
-  _: Request,
-  { params }: { params: { pid?: string } }
-) => {
+const GET = async (_: Request, { params }: { params: { pid?: string } }) => {
   try {
     const { pid } = params;
     if (!pid) {
@@ -35,3 +32,36 @@ export const GET = async (
     );
   }
 };
+
+const DELETE = async (_: Request, { params }: { params: { pid?: string } }) => {
+  try {
+    const { pid } = params;
+    if (!pid) {
+      return NextResponse.json(
+        { message: "Post ID is required" },
+        { status: 400 }
+      );
+    }
+
+    const post = await prisma.post.findUnique({ where: { id: pid } });
+
+    if (!post) {
+      return NextResponse.json({ message: "Post not found" }, { status: 404 });
+    }
+
+    await prisma.post.delete({ where: { id: pid } });
+
+    return NextResponse.json(
+      { message: "Post deleted successfully", data: pid },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error deleting post:", error);
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+};
+
+export { GET, DELETE };
