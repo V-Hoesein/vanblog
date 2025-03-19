@@ -4,7 +4,14 @@ import postSchema from "@/lib/zod/post";
 
 export const GET = async () => {
   try {
-    const posts = await prisma.post.findMany();
+    const posts = await prisma.post.findMany({
+      include: {
+        Comment: true,
+        _count: {
+          select: { Like: true },
+        },
+      },
+    });
     return NextResponse.json({
       message: "Posts fetched successfully",
       data: posts,
