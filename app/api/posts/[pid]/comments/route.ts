@@ -3,10 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (
   _: NextRequest,
-  { params }: { params: { pid?: string } }
+  { params }: { params: Promise<{ pid?: string }> }
 ) => {
   try {
-    const { pid } = params;
+    const { pid } = await params;
 
     if (!pid) {
       return NextResponse.json(
