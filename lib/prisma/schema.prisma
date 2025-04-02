@@ -9,18 +9,36 @@ generator client {
 
 model User {
   id            String    @id @default(cuid())
+  username      String    @unique
   name          String?
+  bio           String?
   email         String    @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Post      Post[]
-  Comment   Comment[]
-  Like      Like[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  posts    Post[]
+  comments Comment[]
+  likes    Like[]
+
+  followers Follow[] @relation("UserFollowers")
+  following Follow[] @relation("UserFollowing")
+  Repost    Repost[]
+}
+
+model Follow {
+  id          String @id @default(cuid())
+  followerId  String
+  followingId String
+
+  follower  User @relation("UserFollowers", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation("UserFollowing", fields: [followingId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
 }
 
 model Account {
@@ -69,19 +87,36 @@ model Post {
   authorId String
   author   User?  @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: Cascade)
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Comment   Comment[]
-  Like      Like[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Comment  Comment[]
+  Like     Like[]
+  repostId String?
+  Repost   Repost?
+}
+
+model Repost {
+  id     String @id @default(cuid())
+  userId String
+  postId String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: NoAction, onUpdate: Cascade)
+
+  @@unique([userId, postId])
 }
 
 model Comment {
-  id           String @id @default(cuid())
-  content      String @db.Text
-  postId       String
-  post         Post?  @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  comentatorId String
-  comentator   User?  @relation(fields: [comentatorId], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  id        String @id @default(cuid())
+  content   String @db.Text
+  postId    String
+  post      Post?  @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  commentId String
+  comment   User?  @relation(fields: [commentId], references: [id], onDelete: NoAction, onUpdate: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
