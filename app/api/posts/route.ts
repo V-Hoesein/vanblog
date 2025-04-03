@@ -60,7 +60,7 @@ export const POST = async (request: NextRequest) => {
       {
         message: "Post created successfully",
         status: "success",
-        data: post.title,
+        data: post,
       },
       { status: 201 }
     );
