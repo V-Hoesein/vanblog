@@ -4,12 +4,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (
   _: NextRequest,
-  { params }: { params: Promise<{ pid?: string }> }
+  { params }: { params: Promise<{ postId?: string }> }
 ) => {
   try {
-    const { pid } = await params;
+    const { postId } = await params;
 
-    if (!pid) {
+    if (!postId) {
       return NextResponse.json(
         { message: "Missing postId parameter" },
         { status: 400 }
@@ -17,8 +17,8 @@ export const GET = async (
     }
 
     const postComments = await prisma.comment.findMany({
-      where: { postId: pid },
-      include: { comentator: true },
+      where: { postId },
+      include: { comment: true },
     });
 
     return NextResponse.json({
@@ -36,12 +36,12 @@ export const GET = async (
 
 export const POST = async (
   request: NextRequest,
-  { params }: { params: Promise<{ pid?: string }> }
+  { params }: { params: Promise<{ postId?: string }> }
 ) => {
   try {
-    const { pid } = await params;
+    const { postId } = await params;
 
-    if (!pid) {
+    if (!postId) {
       return NextResponse.json(
         { message: "Missing postId parameter" },
         { status: 400 }
@@ -49,7 +49,7 @@ export const POST = async (
     }
 
     const existPost = await prisma.post.findUnique({
-      where: { id: pid },
+      where: { id: postId },
     });
 
     if (!existPost) {
@@ -72,8 +72,8 @@ export const POST = async (
     const comment = await prisma.comment.create({
       data: {
         content: validate.data.content,
-        postId: pid,
-        comentatorId: validate.data.commentatorId,
+        postId: postId,
+        commentId: validate.data.commentatorId,
       },
     });
 
