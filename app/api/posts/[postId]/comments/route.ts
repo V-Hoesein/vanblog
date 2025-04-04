@@ -18,7 +18,11 @@ export const GET = async (
 
     const postComments = await prisma.comment.findMany({
       where: { postId },
-      include: { comment: true },
+      include: {
+        comment: {
+          omit: { password: true, emailVerified: true, bio: true, name: true },
+        },
+      },
     });
 
     return NextResponse.json({
@@ -63,6 +67,7 @@ export const POST = async (
       return NextResponse.json(
         {
           message: "Validation error",
+          status: "error",
           errors: validate.error.flatten().fieldErrors,
         },
         { status: 400 }
@@ -78,13 +83,21 @@ export const POST = async (
     });
 
     return NextResponse.json(
-      { message: "Comment created successfully", data: comment.content },
+      {
+        message: "Comment created successfully",
+        status: "success",
+        data: comment,
+      },
       { status: 201 }
     );
   } catch (error) {
     console.log("Error creating comment:", error);
     return NextResponse.json(
-      { message: "Internal Server Error", data: null },
+      {
+        message: "Internal Server Error",
+        status: "error",
+        data: null,
+      },
       { status: 500 }
     );
   }
