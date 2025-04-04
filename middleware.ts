@@ -1,14 +1,26 @@
-import { auth } from "@/lib/auth";
+import { getToken } from "next-auth/jwt";
+import { NextRequest, NextResponse } from "next/server";
 
-export default auth((req) => {
-  const auth = req.auth;
-  const currentPath = req.nextUrl.pathname;
+export default async function middleware(req: NextRequest) {
+  const PUBLIC_API = ["/api/auth/signin", "/api/auth/signup"];
+  const token = await getToken({ req, secret: process.env.AUTH_SECRET });
 
-  if (currentPath === "/signin" && !!auth) {
-    const newUrl = new URL("/", req.nextUrl.origin);
-    return Response.redirect(newUrl);
+  if (PUBLIC_API.some((path) => req.nextUrl.pathname.startsWith(path))) {
+    return NextResponse.next();
   }
-});
+
+  // If the token is not present, response with 401
+  if (!token) {
+    return NextResponse.json(
+      {
+        message: "Unauthorized",
+        status: "error",
+        data: null,
+      },
+      { status: 401 }
+    );
+  }
+}
 
 export const config = {
   matcher: [
