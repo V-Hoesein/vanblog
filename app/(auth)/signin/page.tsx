@@ -5,7 +5,6 @@ import SigninProvider from "./components/signin-provider";
 import { FaGithub } from "react-icons/fa6";
 
 import { Metadata } from "next";
-import Wave from "react-wavify";
 export const metadata: Metadata = {
   title: "OMG • Sign In",
   description: "Sign in to your account",
@@ -13,19 +12,7 @@ export const metadata: Metadata = {
 
 const SignInPage = () => {
   return (
-    <div className="flex flex-col items-center justify-center h-screen mx-auto px-10 bg-white gap-y-4 relative">
-      <Wave
-        className="absolute top-0 left-0 right-0 rotate-180"
-        fill="#000000"
-        paused={false}
-        style={{ display: "flex" }}
-        options={{
-          height:20,
-          amplitude: 20,
-          speed: 0.15,
-          points: 3,
-        }}
-      />
+    <>
       <h3 className="font-semibold">Sign In with your account</h3>
 
       <SignInForm className="max-w-sm w-full" />
@@ -53,25 +40,14 @@ const SignInPage = () => {
             label="Sign In with Github"
             provider="github"
           />
+
+          <Link href="/signup" className="text-xs hover:underline mt-5">
+            Don&apos;t an account? create one
+          </Link>
         </div>
       </div>
 
-      <div className="flex justify-center items-center gap-x-3 text-sm text-gray-500 flex-wrap absolute bottom-5">
-        <span>© {new Date().getFullYear()}</span>
-        <Link href="#" className="hover:underline font-extralight text-xs">
-          OMG Terms
-        </Link>
-        <Link href="#" className="hover:underline font-extralight text-xs">
-          Privacy Policy
-        </Link>
-        <Link href="#" className="hover:underline font-extralight text-xs">
-          Cookie Policy
-        </Link>
-        <Link href="#" className="hover:underline font-extralight text-xs">
-          Report a Problem
-        </Link>
-      </div>
-    </div>
+    </>
   );
 };
 
