@@ -40,6 +40,7 @@ const SignInForm = ({ className }: { className?: string }) => {
         name="username"
         value={userInput.username}
         onChange={handleChange}
+        autoComplete="username"
       />
       <Input
         className="h-12 rounded-lg"
@@ -48,6 +49,7 @@ const SignInForm = ({ className }: { className?: string }) => {
         name="password"
         value={userInput.password}
         onChange={handleChange}
+        autoComplete="current-password"
       />
       <Button
         className={`font-semibold h-12 rounded-lg ${
