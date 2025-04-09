@@ -35,7 +35,7 @@ const SignInForm = ({ className }: { className?: string }) => {
     >
       <Input
         className="h-12 rounded-lg"
-        placeholder="Username, phone, or email"
+        placeholder="Username"
         type="text"
         name="username"
         value={userInput.username}
