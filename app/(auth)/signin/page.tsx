@@ -5,6 +5,7 @@ import SigninProvider from "./components/signin-provider";
 import { FaGithub } from "react-icons/fa6";
 
 import { Metadata } from "next";
+import Wave from "react-wavify";
 export const metadata: Metadata = {
   title: "OMG • Sign In",
   description: "Sign in to your account",
@@ -13,6 +14,18 @@ export const metadata: Metadata = {
 const SignInPage = () => {
   return (
     <div className="flex flex-col items-center justify-center h-screen mx-auto px-10 bg-white gap-y-4 relative">
+      <Wave
+        className="absolute top-0 left-0 right-0 rotate-180"
+        fill="#000000"
+        paused={false}
+        style={{ display: "flex" }}
+        options={{
+          height:20,
+          amplitude: 20,
+          speed: 0.15,
+          points: 3,
+        }}
+      />
       <h3 className="font-semibold">Sign In with your account</h3>
 
       <SignInForm className="max-w-sm w-full" />
